@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "downloadedAt": "2026-09-29T14:04:29.562Z",
+  "source": "GeoNames cities500",
+  "sources": {
+    "cities": "https://download.geonames.org/export/dump/cities500.zip",
+    "administration": "https://download.geonames.org/export/dump/admin1CodesASCII.txt"
+  },
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "attributionUrl": "https://www.geonames.org/",
+  "rawRows": 235895,
+  "files": {
+    "cities500.txt": {
+      "bytes": 41603573,
+      "sha256": "e0dc3b283f1fe1f94ef617a26cc3ec74b3a85269b2125e20fa8f8ac88ba4b2ae"
+    },
+    "admin1CodesASCII.txt": {
+      "bytes": 151583,
+      "sha256": "1da92a6323a5fec3176f3f743bf4cf4040fd56a876da55e46fbca23c863aa60a"
+    }
+  },
+  "assets": {
+    "cities500.txt.gz": "65d662df4c7be2000e2c264c5d1945bc722f59698e046fba0b0332a63873a976",
+    "admin1CodesASCII.txt.gz": "63266936a3a520099b5c842067d4730bb24e0d14f3e1cfd9a9279f5125f89852"
+  }
+}

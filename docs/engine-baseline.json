@@ -1,0 +1,208 @@
+{
+  "profile": "global-jyotish-geometric-dasha-v6",
+  "sourceProject": "GLOBAL",
+  "sourceCommit": "3b1eda5d086af5fc502505124e50f35486c8d74f",
+  "sourceState": "2026-09-29 working tree, not the committed or published GLOBAL version",
+  "files": [
+    {
+      "file": "lib/astrology/contracts.ts",
+      "sha256": "8fa395a77ce1123d15c0627cd8d780a237aa1f9e83145d7acc2450ec330f615a"
+    },
+    {
+      "file": "lib/astrology/panchanga-contract.ts",
+      "sha256": "2a9b8e067918a305a5efc8d133a121b06b317a0b82322ba0c9108e3fbe617ba8"
+    },
+    {
+      "file": "lib/astrology/day-panchanga-contract.ts",
+      "sha256": "b99a1b89840560da1b53351aca9dc6f9d784722b7dfc37ad1d2a15a84c846806"
+    },
+    {
+      "file": "lib/astrology/transit-contract.ts",
+      "sha256": "d56dae716942270da8d1a1032cd50236fc4fb074245b8614ef36dabda660ca11"
+    },
+    {
+      "file": "lib/astrology/month-panchanga-contract.ts",
+      "sha256": "661941e5408c9bb22d37824439343fab5a7890a9e036be7b41d1da2e8893774e"
+    },
+    {
+      "file": "lib/astrology/jyotish.ts",
+      "sha256": "f7635708f7b097ae39aa19aa794f8c2944c81863d8a23e68abc36b129d3ecb0a"
+    },
+    {
+      "file": "lib/astrology/varga-methods.ts",
+      "sha256": "a057566f6f4da68e7390d9d59975c65927f3ec423bb8fdb0bfed921e703943cc"
+    },
+    {
+      "file": "lib/astrology/dasha.ts",
+      "sha256": "ac12ba30b5c4af0203296b283ed4cd908d1e46a4fd72bfdc87d9b2b74f25023a"
+    },
+    {
+      "file": "lib/astrology/day-solar-periods.ts",
+      "sha256": "dcbca625a30a4a688d73a2f40c2d367882369768fed973584dee5d81cba64b90"
+    },
+    {
+      "file": "lib/astrology/panchanga-details.ts",
+      "sha256": "e6892fa383977eb2edab4a89052a264c5714e0189a15fe727c8eb267cc5f15ec"
+    },
+    {
+      "file": "lib/astrology/muhurta-definitions.ts",
+      "sha256": "6f6940c256ead160eb21a250465f8dade453d3c188cf1633666fed2df0de5c43"
+    },
+    {
+      "file": "lib/astrology/timeline-layout.ts",
+      "sha256": "6ae0d1cc0a3e7bc321a2d234cd7e43e33870c04bcb422dc70f0e116dfae342f1"
+    },
+    {
+      "file": "lib/astrology/year-transit-contract.ts",
+      "sha256": "c3502bc1f47e1b556ff99ff4862834c5c4645ca6511a6e35e52cd6ede7a4313c"
+    },
+    {
+      "file": "lib/astrology/transit-events.ts",
+      "sha256": "fa1fcd6cf1d296bf702feaf31a23c87de106842c620664a973045152fdc5d4c5"
+    },
+    {
+      "file": "lib/astrology/workspace-copy.ts",
+      "sha256": "892c57e902bb962d47580f25cdf3bd5b4079940e034609d9b8c2a6e61492127e"
+    },
+    {
+      "file": "lib/astrology/validate-day-panchanga.ts",
+      "sha256": "b9cd440d0d8c354e73854aa87ff4009a7cc8e13cfec3fc98dde606e891410b0e"
+    },
+    {
+      "file": "lib/astrology/validate-transit.ts",
+      "sha256": "32ef613236a7a43b3ffd2c5c8dd531115664c9f72bc8a621bb0918a9a07664fc"
+    },
+    {
+      "file": "lib/astrology/facts.ts",
+      "sha256": "be7e9fd7516984e3e52e888c4b4e4e87160b40e8e8ce6f7e5f7934ff739bc042"
+    },
+    {
+      "file": "lib/astrology/validate-panchanga.ts",
+      "sha256": "2c1eefaff624ef15819623176915c11ea12532a7d906eadfa00b0b5c1eb665e5"
+    },
+    {
+      "file": "lib/astrology/json-equal.ts",
+      "sha256": "c30ee6d55ea0379208179591b067c479a67aaba5cd7d23a6c53bd0e32612400f"
+    },
+    {
+      "file": "lib/astrology/chart-overlay.ts",
+      "sha256": "a31d3f1a00e473b66d548dedb667720d5e3fd79de8e652aec9503a2c28bc4055"
+    },
+    {
+      "file": "lib/astrology/aspects.ts",
+      "sha256": "9a840c083427be9f0d20bb6cd29d9a589f37bfd8ee30f483df1189e2da19ab5e"
+    },
+    {
+      "file": "lib/astrology/validate-result.ts",
+      "sha256": "b7fac72345e127d3ca13cfb94f84f2b2d61ca87153df861100f428869b73c813"
+    },
+    {
+      "file": "lib/astrology/yogini.ts",
+      "sha256": "5612174ac4f819c0bd93984aab14e99f00f1a4bd3f993d025783103f3765d694"
+    },
+    {
+      "file": "lib/astrology/validate-month-panchanga.ts",
+      "sha256": "11e26c7aa4cfb402bdadce45c26f172c00ed6954109059560d17675a6afbfc60"
+    },
+    {
+      "file": "lib/astrology/validate-year-transits.ts",
+      "sha256": "5c123b4035f0133ec3db96242131a765512a1d86b684db713f0a945456383075"
+    },
+    {
+      "file": "lib/astrology/saturn-transit-contract.ts",
+      "sha256": "866c17235a7f2f8789ba41d8d2269419cbdc789d51b99d5402a4f150ac782620"
+    },
+    {
+      "file": "lib/astrology/validate-saturn-transits.ts",
+      "sha256": "beb626e67e5179a8046776d06a4c3e0e376e3e1a43b37cdcc0e787cb3b618e3a"
+    },
+    {
+      "file": "lib/astrology/karakas-arudhas.ts",
+      "sha256": "ef94392279c2b50ae87d4b67cd93c08ea6290212ed7e45b10bc871dc851d335c"
+    },
+    {
+      "file": "lib/astrology/ashtakavarga.ts",
+      "sha256": "b7d6dcce4ea5a89e0c6e43814157f39ce6fade113073db2d4fd6f98801471a46"
+    },
+    {
+      "file": "lib/astrology/year-transit-moment.ts",
+      "sha256": "7d8841b1036a9f4a33aac3c1cd443f382b394670e56a74d7665d75068ace11a3"
+    },
+    {
+      "file": "lib/astrology/planet-condition.ts",
+      "sha256": "c0d3294ca5f748ad7470ad352d29ef9ee7182b2fdbc1b904d77ee5d335b1521d"
+    },
+    {
+      "file": "lib/astrology/chart-text-layout.ts",
+      "sha256": "a7321033ced6a0ab0124a07878af9f0fc5a0ce4b48aa955deb290f7f03d4f148"
+    },
+    {
+      "file": "lib/astrology/chart-geometry.ts",
+      "sha256": "ec4c91258e73b5ad901f19b379cf84cfd651749bd1fe78b6ecc16a6ed1586a9a"
+    },
+    {
+      "file": "lib/astrology/dasha-display.ts",
+      "sha256": "904598a5b7665afea9dce87d273c068554eb6fd066f1e0808c531a2e12e2ed72"
+    },
+    {
+      "file": "lib/astrology/ashtakavarga-reductions.ts",
+      "sha256": "41d7407694a7dc23618840c4c37255673022d09960d26e4ade43ede0f520b97e"
+    },
+    {
+      "file": "lib/astrology/sade-sati.ts",
+      "sha256": "bbd3e4f2fb895f7a5c285415e2a54b35f5e79e567a09f4e24d8a2171d27944a4"
+    },
+    {
+      "file": "lib/astrology/planet-chakras.ts",
+      "sha256": "55e2ea8c3721701b6ca5aa7dc480bb293581f3241a27d9b2f3cf18307a5fadbd"
+    },
+    {
+      "file": "lib/astrology/day-panchanga-core.ts",
+      "sha256": "bcfeb93ffbe17a2950b12050fb5e670ccfed9f324f78a3e4a36f03acd0dd19af"
+    },
+    {
+      "file": "lib/astrology/angular-events.ts",
+      "sha256": "e5fcafd94abe22a7cfd018d12cb50641423aa689a84a238f9b27998b1f488ed8"
+    },
+    {
+      "file": "lib/astrology/month-panchanga-core.ts",
+      "sha256": "af0e5fe06b492d9f13b3635385e77cb45121dfc7d1cee283ccb78bdec810a6ce"
+    },
+    {
+      "file": "lib/astrology/swiss-runtime.ts",
+      "sha256": "b70e4202005ff2964ffe54535b8c900867b415548d21c54e734b959b0e961e94"
+    },
+    {
+      "file": "lib/astrology/panchanga-core.ts",
+      "sha256": "f5270dfbfef5e4acf492795c7567f51019c860979a58fc1417bfb9cc388ab630"
+    },
+    {
+      "file": "lib/astrology/transit-core.ts",
+      "sha256": "ff138383360a6555882aafce80b1b084b1e840bc57dd9e3118f86cfc0b9bd57d"
+    },
+    {
+      "file": "lib/astrology/positions-core.ts",
+      "sha256": "f1441eafe1929b7c41eef5860524b62972e70989b1454d81c6f64275e687b2fa"
+    },
+    {
+      "file": "lib/astrology/time-scales.ts",
+      "sha256": "d43ac41b4a5bd9eb0f9e8f8986ccaa0efa5255075cb194c311891493827ef10c"
+    },
+    {
+      "file": "lib/astrology/saturn-transit-core.ts",
+      "sha256": "74ccd0c762c1c35ad4534067d8011329b9c909e18e5e582a57f5eb661f3e9954"
+    },
+    {
+      "file": "lib/astrology/year-transit-core.ts",
+      "sha256": "9344dc056c492996d69c2c1311ea829e5e90eba61458bbb9d9ad36af4c3d123f"
+    },
+    {
+      "file": "lib/astrology/engine-core.ts",
+      "sha256": "58e33e6070302436b4a65fa620caf787b72b4102b7365ea42a7ca60ddc1a5fd5"
+    },
+    {
+      "file": "lib/astrology/place-search.ts",
+      "sha256": "303517accd115ddc2a0db726141fa628a50feb6945dce75617ae8e0f21118a3d"
+    }
+  ]
+}
