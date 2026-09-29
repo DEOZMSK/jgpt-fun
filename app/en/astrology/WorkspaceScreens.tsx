@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+
 import type { WorkspaceAction, WorkspaceView } from "../../../lib/local-workspace/controller";
 import type { AstrologyLocale } from "../../../lib/astrology/workspace-copy";
 import { AstrologyChart } from "./AstrologyChart";
@@ -36,8 +36,7 @@ export function ChartCatalog({ view, locale, act, openProfile, newProfile, creat
   </section>;
 }
 export function WorkspaceHome({ view, locale, act, openProfile, newProfile, date, recentProfiles = [] }: Props & { date: string; onDate: (d: string) => void; calendar: () => void; recentProfiles?: string[] }) {
-  const pathname = usePathname();
-  const basePath = `/${locale}/${pathname?.includes("/admin/orchestra/astrology") ? "admin/orchestra/astrology" : pathname?.includes("/demo/astrology") ? "demo/astrology" : "astrology"}`;
+  const basePath = `/${locale}/astrology`;
   const t = (en: string, ru: string) => locale === "ru" ? ru : en, { ui } = view.data;
   const calculation = view.results.astrology, natal = calculation?.kind === "astrology" ? calculation.result : null;
   const transit = dayReady(ui.dayPanchanga, date) ? ui.dayPanchanga.result!.moment : null;
@@ -47,7 +46,7 @@ export function WorkspaceHome({ view, locale, act, openProfile, newProfile, date
   const selected = view.data.profiles.find(p => p.id === ui.selectedProfileId) ?? recentProfiles.flatMap(id => view.data.profiles.find(p => p.id === id) ?? [])[0];
   if (!view.loaded) return <section className={styles.homeDashboard}><h1>{t("Workspace home", "Главная мастерской")}</h1><p className={styles.hint}>{t("Your collection will appear after it connects.", "Твоя коллекция появится после подключения.")}</p></section>;
   return <section className={styles.homeDashboard} aria-label={t("Workspace home", "Главная мастерской")}>
-    <header className={styles.homeWelcome}><p>JYOTISHGPT · {t("Your workspace", "Твоя мастерская")}</p><h1>{selected ? t("Continue exploring", "Продолжим изучать карту") : t("Start with a birth chart", "Начни с карты рождения")}</h1><p>{t("Your charts, calculations and tools in one place. Use the buttons or the command bar below.", "Твои карты, расчёты и инструменты в одном месте. Используй кнопки или строку команд внизу.")}</p><div className={styles.compactActions}><button type="button" className={styles.primary} onClick={newProfile}>{t("Build a chart", "Построить карту")}</button>{selected && <button type="button" onClick={() => openProfile(selected.id)}>{t("Continue", "Продолжить")}: {selected.data.name}</button>}<Link href={`${basePath}/charts`} onClick={() => showAllCharts(act)}>{t("All charts and folders", "Все карты и папки")}</Link></div></header>
+    <header className={styles.homeWelcome}><p>JGPT-FUN · {t("Your workspace", "Твоя мастерская")}</p><h1>{selected ? t("Continue exploring", "Продолжим изучать карту") : t("Start with a birth chart", "Начни с карты рождения")}</h1><p>{t("Birth charts, divisional charts, periods and transits.", "Карты рождения, дробные карты, периоды и транзиты.")}</p><div className={styles.compactActions}><button type="button" className={styles.primary} onClick={newProfile}>{t("Build a chart", "Построить карту")}</button>{selected && <button type="button" onClick={() => openProfile(selected.id)}>{t("Continue", "Продолжить")}: {selected.data.name}</button>}<Link href={`${basePath}/charts`} onClick={() => showAllCharts(act)}>{t("All charts and folders", "Все карты и папки")}</Link></div></header>
     <aside>
       <h2>{ui.search ? t("Search results", "Результаты поиска") : t("Recent and saved charts", "Недавние и сохранённые карты")}</h2>
       <div className={styles.quickSearch}>
@@ -71,9 +70,4 @@ export function WorkspaceHome({ view, locale, act, openProfile, newProfile, date
       </section>
     </div><DailyPanchangaView state={ui.dayPanchanga} month={ui.monthPanchanga} date={date} locale={locale} act={act} busy={view.busy} southern={ui.southern} hasProfile={!!ui.selectedProfileId} compact /></div>
   </section>;
-}
-export function LocalProfileScreen({ view, locale, openCharts }: { view: WorkspaceView; locale: AstrologyLocale; openCharts: () => void }) {
-  const t = (en: string, ru: string) => locale === "ru" ? ru : en;
-  const selected = view.data.profiles.find(p => p.id === view.data.ui.selectedProfileId);
-  return <section className={styles.accountScreen}><h1>{t("My profile", "Мой профиль")}</h1><h2>{t("Local workspace", "Локальная мастерская")}</h2><p className={styles.hint}>{t("Account connection and private settings are a separate upcoming stage.", "Подключение аккаунта и приватные настройки — отдельный следующий этап.")}</p><div className={styles.catalogActions}><button disabled>{t("Change password · later", "Изменить пароль · позже")}</button><button disabled>{t("Delete account · later", "Удалить аккаунт · позже")}</button></div><div className={styles.accountColumns}><section><h2>{t("My birth chart", "Моя карта рождения")}</h2><p><strong>{selected?.data.name ?? t("Not selected", "Не выбрана")}</strong></p><p>{selected?.data.date} {selected?.data.time}</p><p>{selected?.data.place}</p><button type="button" onClick={openCharts}>{t("Choose a chart", "Выбрать карту")}</button></section><section><h2>{t("Current location", "Сейчас я живу в")}</h2><p>{t("Not set. A separate location will be connected to the daily tools later; birth coordinates are not used as your home address.", "Не указано. Отдельное место подключим к ежедневным инструментам позже; координаты рождения не считаются адресом проживания.")}</p><button disabled>{t("Choose city · later", "Выбрать город · позже")}</button></section></div></section>;
 }

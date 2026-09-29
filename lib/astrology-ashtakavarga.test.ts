@@ -6,7 +6,6 @@ import { WorkspaceController, type WorkspaceAction } from "./local-workspace/con
 import { decodeWorkspace, emptyWorkspace, sampleDraft, WorkspaceError, type WorkspaceData } from "./local-workspace/model";
 import type { WorkspaceStorage } from "./local-workspace/storage";
 import { calculateAstrology } from "./astrology/engine-core";
-import { buildWorkspaceAssistantContext } from "./local-workspace/assistant-context";
 
 const names: PlanetName[] = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"];
 const makeChart = (signs: number[], ascendantSign = 5): VargaChart => ({ method: "synthetic-sign-fixture", ascendant: ascendantSign * 30 + 5,
@@ -66,22 +65,12 @@ test("AV selection preserves results and language-independent state; context is 
   const original = structuredClone(c.getSnapshot().data.calculations);
   const action = { type: "select-ashtakavarga", selection: { ...emptyAvSelection(), varga: "D9", target: "Mercury" } } as const;
   await c.dispatch(action); assert.equal(c.getSnapshot().error, null);
-  let ctx = buildWorkspaceAssistantContext(c.getSnapshot(), "ru");
-  assert.equal(ctx.ashtakavarga?.sav.total, 337); assert.equal(ctx.ashtakavarga?.varga, "D9");
-  assert.equal(ctx.ashtakavarga?.bav.filter(row => row.prastara).length, 1);
-  assert.equal(ctx.ashtakavarga?.bav.find(row => row.planet === "Mercury")?.prastara?.length, 8);
   const reductionAction = { ...action, selection: { ...action.selection, stage: "ekadhipatya" as const } };
   await c.dispatch(reductionAction);
-  const reductionContext = buildWorkspaceAssistantContext(c.getSnapshot(), "en");
-  assert.equal(reductionContext.ashtakavargaReductions?.stage, "ekadhipatya");
-  assert.equal(reductionContext.ashtakavargaReductions?.bav.filter(row => "trikona" in row).length, 1);
-  assert.equal(reductionContext.ashtakavarga?.sav.total, 337);
   assert.deepEqual(c.getSnapshot().data.calculations, original);
   const reductionRestored = new WorkspaceController(store); await reductionRestored.initialize();
   assert.equal(reductionRestored.getSnapshot().data.ui.ashtakavarga.stage, "ekadhipatya"); reductionRestored.dispose();
   await c.dispatch({ type: "select-dasha-system", system: "yogini" });
-  assert.equal(buildWorkspaceAssistantContext(c.getSnapshot(), "en").ashtakavarga, null);
-  assert.equal(buildWorkspaceAssistantContext(c.getSnapshot(), "en").ashtakavargaReductions, null);
   await c.dispatch(action); assert.deepEqual(c.getSnapshot().data.calculations, original);
   const old = JSON.parse(JSON.stringify(store.data)); delete old.ui.ashtakavarga;
   const decoded = decodeWorkspace(old); assert.deepEqual(decoded.ui.ashtakavarga, emptyAvSelection());
@@ -93,7 +82,5 @@ test("AV selection preserves results and language-independent state; context is 
   store.fail = false; await c.dispatch({ type: "retry-storage" }); await c.dispatch(action);
   const restored = new WorkspaceController(store); await restored.initialize();
   assert.deepEqual(restored.getSnapshot().data.ui.ashtakavarga, action.selection);
-  const wrong = structuredClone(restored.getSnapshot()); wrong.data.ui.selectedProfileId = null;
-  ctx = buildWorkspaceAssistantContext(wrong, "en"); assert.equal(ctx.ashtakavarga, null);
   c.dispose(); restored.dispose();
 });

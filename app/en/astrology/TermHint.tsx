@@ -2,12 +2,11 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { useSiteLocale } from "../../components/SiteLocaleProvider";
-import { discussInWorkspace } from "../../../lib/workspace-chat-events";
 import styles from "./term-hint.module.css";
 
-/** Static, accessible explanations; never requests a model or reads private context. */
+/** Static, accessible definitions of calculation terms. */
 export function TermHint({ children, text }: { children: ReactNode; text: string }) {
-  const id = useId(), trigger = useRef<HTMLButtonElement>(null), bubble = useRef<HTMLDivElement>(null), action = useRef<HTMLButtonElement>(null);
+  const id = useId(), trigger = useRef<HTMLButtonElement>(null), bubble = useRef<HTMLDivElement>(null);
   const locale = useSiteLocale();
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null), suppressFocus = useRef(false);
   const [open, setOpen] = useState(false), [pinned, setPinned] = useState(false);
@@ -33,13 +32,10 @@ export function TermHint({ children, text }: { children: ReactNode; text: string
   }, [open]);
   return <><button ref={trigger} type="button" className={styles.term} aria-controls={open ? id : undefined} aria-haspopup="dialog" aria-expanded={open}
     onFocus={show} onBlur={event => blur(event.relatedTarget)} onMouseEnter={show} onMouseLeave={leave}
-    onKeyDown={event => { if (open && (event.key === "ArrowDown" || (event.key === "Tab" && !event.shiftKey))) { event.preventDefault(); action.current?.focus(); } }}
     onClick={() => { setPinned(!pinned); if (pinned) setOpen(false); else show(); }}>{children}</button>
     {open && createPortal(<div ref={bubble} id={id} role="dialog" aria-label={locale === "ru" ? "Пояснение термина" : "Term explanation"} className={styles.bubble} style={position}
       onMouseEnter={() => { if (timer.current) clearTimeout(timer.current); }} onMouseLeave={leave} onBlur={event => blur(event.relatedTarget)}>
-      <p>{text}</p><button ref={action} type="button" className={styles.discuss} onClick={() => { close(); discussInWorkspace(locale === "ru" ? `Объясни подробнее: ${text}` : `Explain further: ${text}`); }}
-        onKeyDown={event => { if (event.key === "Tab") { event.preventDefault(); close(); suppressFocus.current = true; trigger.current?.focus(); suppressFocus.current = false; } }}>
-        {locale === "ru" ? "Обсудить в чате" : "Discuss in chat"}</button>
+      <p>{text}</p>
     </div>, document.body)}</>;
 }
 

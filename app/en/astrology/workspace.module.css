@@ -168,17 +168,7 @@
 .localFooter { color: var(--muted); font-size: 12px; }
 .localFooter p { margin-bottom: 10px; }
 .localFooter a { color: var(--blue); }
-.assistantPanel { max-width: 1388px; margin: 0 auto 24px; padding: 22px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
-.assistantPanel textarea { width: 100%; min-height: 65px; resize: vertical; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-soft); color: var(--ink); }
 .testBadge { color: var(--ink); font-size: 12px; padding: 6px 10px; background: var(--surface); border-radius: 6px; }
-.assistantReply, .openedArticle { padding: 14px; margin-top: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow-wrap: anywhere; }
-.assistantReply ul { list-style: disc; padding-left: 22px; }
-.sourceList, .commandExamples { display: grid; gap: 10px; margin-top: 12px; list-style: none; }
-.sourceList button, .commandExamples button { color: var(--ink); text-align: left; text-decoration: underline; overflow-wrap: anywhere; padding: 5px 0; }
-.sourceList p { color: var(--muted); font-size: 13px; }
-.openedArticle a { color: var(--ink); text-decoration: underline; }
-.contextPreview { font-size: 12px; max-height: 360px; overflow: auto; padding: 16px; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--surface); }
-@media (max-width: 760px) { .assistantPanel { margin: 0 14px 20px; padding: 16px; } .assistantPanel .panelTitle { align-items: flex-start; flex-wrap: wrap; } }
 @media (max-width: 1100px) { .workspaceGrid { grid-template-columns: 240px minmax(0,1fr); gap: 16px; } .profileFields { grid-template-columns: repeat(2,minmax(0,1fr)); } .resultColumns { grid-template-columns: minmax(0,1fr); } }
 @media (max-width: 760px) { .workspaceGrid { grid-template-columns: minmax(0,1fr); padding: 0 14px; } .workspaceIntro { padding: 16px; flex-direction: column; gap: 5px; } .peopleList { max-height: 230px; overflow-y: auto; } .profilePanel, .results, .savedPanel { padding: 16px; } .profileFields { grid-template-columns: minmax(0,1fr); } .numbers { grid-template-columns: repeat(2,minmax(0,1fr)); } .backupPanel, .localFooter { padding: 20px 16px; } .toolbar { align-items: stretch; } .workspace .header { display: flex; flex-wrap: wrap; padding: 16px; gap: 12px 20px; } .header h1 { font-size: 21px; } .languagePicker { margin-left: auto; } .facts { grid-template-columns: minmax(0,1fr); } }
 
@@ -258,10 +248,10 @@
 .primary { background: var(--surface); color: var(--ink); border-color: var(--line); }
 .secondary, .toolNav button, .peopleList button, .savedList button { background: var(--surface); color: var(--ink); }
 .toolNav button[aria-pressed=true], .peopleList button[aria-pressed=true], .savedList button[aria-pressed=true], .compactActions button[aria-pressed=true], .toolbar button[aria-pressed=true], .mahaList button[aria-pressed=true] { color: var(--ink); background: var(--raised); border-color: var(--line) !important; }
-.workspace .field input, .workspace .field select, .inlineField select, .assistantPanel textarea, .backupPanel textarea { background: var(--surface); color: var(--ink); border-color: var(--line); }
+.workspace .field input, .workspace .field select, .inlineField select, .backupPanel textarea { background: var(--surface); color: var(--ink); border-color: var(--line); }
 .workspace input::placeholder, .workspace textarea::placeholder { color: var(--ink); }
 .emptyResult { background: var(--surface); border-color: var(--line); }
-.compactTable thead, .selectedPeriod, .assistantPanel { background: var(--raised); }
+.compactTable thead, .selectedPeriod { background: var(--raised); }
 .compactTable tbody th { font-weight: 600; }
 .toolTabs button[aria-pressed=true] { color: var(--ink); border-color: var(--line); background: var(--raised); }
 .chartLine { fill: var(--ink); stroke: #777; }
@@ -271,10 +261,7 @@
 .numbers > div { background: var(--raised); }
 .error { background: var(--surface); border-color: var(--line); color: var(--ink); }
 .stale, .unsavedNotice { background: var(--surface); color: var(--ink); border-color: var(--line); }
-.assistantPanel { border-color: var(--line); }
-.assistantReply, .openedArticle, .contextPreview { background: var(--surface); border-color: var(--line); color: var(--ink); }
 .testBadge { color: var(--ink); background: var(--surface); }
-.sourceList button, .commandExamples button, .openedArticle a { color: var(--ink); }
 .mahaList button[aria-pressed=true] { box-shadow: none; }
 .period { border-color: var(--line); }
 .period button:hover { background: var(--raised); }

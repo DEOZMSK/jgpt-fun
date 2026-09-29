@@ -1,8 +1,6 @@
 {
   "profile": "global-jyotish-geometric-dasha-v6",
-  "sourceProject": "GLOBAL",
-  "sourceCommit": "3b1eda5d086af5fc502505124e50f35486c8d74f",
-  "sourceState": "2026-09-29 working tree, not the committed or published GLOBAL version",
+  "sourceState": "Initial mathematical baseline, 2026-09-29",
   "files": [
     {
       "file": "lib/astrology/contracts.ts",

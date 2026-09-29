@@ -9,7 +9,6 @@ import { NORTH_CELLS, NORTH_SIGN_LABELS } from "./astrology/chart-geometry";
 import { decodeWorkspace, emptyWorkspace, sampleDraft, type WorkspaceData } from "./local-workspace/model";
 import { WorkspaceController, type TransitTransport, type WorkspaceAction } from "./local-workspace/controller";
 import type { WorkspaceStorage } from "./local-workspace/storage";
-import { buildWorkspaceAssistantContext } from "./local-workspace/assistant-context";
 
 const birth = { date: "2000-01-01", time: "12:00:00", place: "Synthetic UTC", timezone: "Etc/UTC", latitude: 0, longitude: 0, nodes: "true", accuracy: "exact" } as const;
 const natal = calculateAstrology(birth);
@@ -63,7 +62,6 @@ test("switches are mutually exclusive, reusable and persistent without changing 
   await c.dispatch({ type: "set-chart-overlay", mode: "none" }); assert.equal(c.getSnapshot().data.ui.chartOverlay, "none");
   await c.dispatch({ type: "set-chart-overlay", mode: "transits" }); assert.equal(calls, 1);
   await c.dispatch({ type: "overlay-transit-at", utc: "2026-09-08T00:00:00Z" }); assert.equal(calls, 2); assert.equal(c.getSnapshot().data.ui.transit.result?.instant.utc, "2026-09-08T00:00:00.000Z");
-  const context = buildWorkspaceAssistantContext(c.getSnapshot(), "ru"); assert.equal(context.chartOverlay?.selected, "transits"); assert.equal(context.chartOverlay?.layer?.markers.length, 9);
   assert.deepEqual(store.data.calculations, saved);
   const restored = new WorkspaceController(store); await restored.initialize(); assert.equal(restored.getSnapshot().data.ui.chartOverlay, "transits");
   await c.dispatch({ type: "new-profile" }); assert.equal(c.getSnapshot().data.ui.chartOverlay, "none"); c.dispose(); restored.dispose();

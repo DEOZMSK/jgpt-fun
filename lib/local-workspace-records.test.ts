@@ -4,8 +4,6 @@ import test from "node:test";
 import { WorkspaceController, type WorkspaceAction } from "./local-workspace/controller";
 import { astrologyInput, decodeWorkspace, emptyWorkspace, hasUnsavedNote, isOutdated, sampleDraft, validateProfile, validateWorkspace, WorkspaceError, type WorkspaceData } from "./local-workspace/model";
 import type { WorkspaceStorage } from "./local-workspace/storage";
-import { buildWorkspaceAssistantContext } from "./local-workspace/assistant-context";
-import { validateAssistantIntent } from "./local-workspace/assistant-contract";
 
 class Store implements WorkspaceStorage {
   data = emptyWorkspace(); revision = 0; fail = false;
@@ -51,14 +49,13 @@ test("historical birth records survive saving and reload without expanding the c
   controller.dispose(); restored.dispose();
 });
 
-test("profile notes persist as plain text without changing calculation snapshots or assistant context", async () => {
+test("profile notes persist as plain text without changing calculation snapshots", async () => {
   const { store, controller: c } = await ready(); await result(c);
   const before = structuredClone(c.getSnapshot().data.calculations), text = '<script>delete-profile</script>\nhttps://invalid.example/notes-only\nТекст';
   const id = await note(c, text); assert.ok(id);
   assert.equal(c.getSnapshot().data.profiles[0].notes?.length, 1);
   assert.equal(c.getSnapshot().data.profiles[0].notes?.[0].text, text);
   assert.deepEqual(c.getSnapshot().data.calculations, before); assert.equal(isOutdated(before[0], c.getSnapshot().data, 2026), false);
-  assert.equal(JSON.stringify(buildWorkspaceAssistantContext(c.getSnapshot(), "ru")).includes("notes-only"), false);
   await c.dispatch({ type: "save-note" }); assert.equal(c.getSnapshot().data.profiles[0].notes?.length, 1);
   await c.dispatch({ type: "edit-note-draft", text: "Updated\nSecond line" }); await c.dispatch({ type: "save-note" });
   assert.equal(c.getSnapshot().data.profiles[0].notes?.[0].revision, 2);
@@ -89,9 +86,6 @@ test("note actions reject foreign IDs, stale revisions, malformed data and over-
   const oversized = structuredClone(c.getSnapshot().data);
   oversized.profiles[0].notes = Array.from({ length: 101 }, () => ({ ...bad.profiles[0].notes![0], id: crypto.randomUUID() }));
   assert.throws(() => decodeWorkspace(oversized));
-  for (const type of ["save-note", "delete-note", "request-profile-deletion", "delete-profile"]) {
-    assert.throws(() => validateAssistantIntent({ type }), /unsupported_command/);
-  }
   const draft = structuredClone(c.getSnapshot().data); draft.ui.noteDraft.profileId = draft.profiles[1].id; assert.throws(() => decodeWorkspace(draft));
   await c.dispatch({ type: "delete-note", id, revision: 1 }); assert.equal(c.getSnapshot().data.profiles[0].notes?.length, 0); assert.equal(c.getSnapshot().data.ui.noteDraft.noteId, null); c.dispose();
 });

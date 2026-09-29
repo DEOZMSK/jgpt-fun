@@ -6,7 +6,6 @@ import { WorkspaceController, type WorkspaceAction } from "./local-workspace/con
 import { decodeWorkspace, emptyWorkspace, sampleDraft, WorkspaceError, type WorkspaceData } from "./local-workspace/model";
 import type { WorkspaceStorage } from "./local-workspace/storage";
 import { calculateAstrology } from "./astrology/engine-core";
-import { buildWorkspaceAssistantContext } from "./local-workspace/assistant-context";
 
 const names: PlanetName[] = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"];
 function chart(longitudes: number[], ascendant = 150): VargaChart {
@@ -182,20 +181,14 @@ class Store implements WorkspaceStorage {
   }
   close() {}
 }
-test("analysis survives reload and failed writes, guards profile context and preserves old snapshots", async () => {
+test("analysis survives reload and failed writes, preserves old snapshots", async () => {
   const store = new Store(), c = new WorkspaceController(store, async input => calculateAstrology(input));
   await c.initialize(); await c.dispatch({ type: "create-profile", draft: sampleDraft() });
   await c.dispatch({ type: "calculate", kind: "astrology" }); await c.dispatch({ type: "save-calculation" });
   const original = structuredClone(c.getSnapshot().data.calculations);
   const action = { type: "select-arudhas", selection: { ...emptyArudhaSelection(), varga: "D9" } } as const;
   await c.dispatch(action); assert.equal(c.getSnapshot().error, null);
-  let ctx = buildWorkspaceAssistantContext(c.getSnapshot(), "en");
-  assert.equal(ctx.arudhas?.rows.length, 12); assert.equal(ctx.arudhas?.varga, "D9"); assert.equal(ctx.karakas, null);
-  assert.equal(ctx.grahaArudhas?.rows.length, 9); assert.equal(ctx.grahaArudhas?.varga, "D9");
-  assert.equal(ctx.grahaArudhas?.calculationId, ctx.arudhas?.calculationId);
   await c.dispatch({ type: "select-panel", panel: "karakas" });
-  ctx = buildWorkspaceAssistantContext(c.getSnapshot(), "ru"); assert.equal(ctx.karakas?.rows.length, 8); assert.equal(ctx.arudhas, null);
-  assert.equal(ctx.grahaArudhas, null);
   await c.dispatch({ type: "select-dasha-system", system: "yogini" });
   await c.dispatch(action); assert.deepEqual(c.getSnapshot().data.calculations, original);
   const old = JSON.parse(JSON.stringify(store.data)); delete old.ui.arudhas;
@@ -208,15 +201,5 @@ test("analysis survives reload and failed writes, guards profile context and pre
   store.fail = false; await c.dispatch({ type: "retry-storage" }); await c.dispatch(action);
   const restored = new WorkspaceController(store); await restored.initialize();
   assert.deepEqual(restored.getSnapshot().data.ui.arudhas, action.selection);
-  assert.deepEqual(buildWorkspaceAssistantContext(restored.getSnapshot(), "en").grahaArudhas?.rows,
-    buildWorkspaceAssistantContext(c.getSnapshot(), "en").grahaArudhas?.rows);
-  const wrong = structuredClone(restored.getSnapshot()); wrong.data.ui.selectedProfileId = null;
-  assert.equal(buildWorkspaceAssistantContext(wrong, "en").arudhas, null);
-  assert.equal(buildWorkspaceAssistantContext(wrong, "en").grahaArudhas, null);
-  wrong.data.profiles.push({ ...wrong.data.profiles[0], id: "another-profile" });
-  wrong.data.ui.selectedProfileId = "another-profile";
-  assert.equal(buildWorkspaceAssistantContext(wrong, "en").arudhas, null);
-  assert.equal(buildWorkspaceAssistantContext(wrong, "en").grahaArudhas, null);
-  wrong.data.ui.workbench.panel = "karakas"; assert.equal(buildWorkspaceAssistantContext(wrong, "en").karakas, null);
   c.dispose(); restored.dispose();
 });

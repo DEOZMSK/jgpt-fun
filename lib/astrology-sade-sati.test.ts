@@ -12,7 +12,6 @@ import { normalizeDegrees } from "./astrology/jyotish";
 import { WorkspaceController, type SaturnTransitTransport } from "./local-workspace/controller";
 import { decodeWorkspace, emptyWorkspace, sampleDraft, validateWorkspace, WorkspaceError, type WorkspaceData } from "./local-workspace/model";
 import type { WorkspaceStorage } from "./local-workspace/storage";
-import { buildWorkspaceAssistantContext } from "./local-workspace/assistant-context";
 
 test("Sade Sati uses only the three whole signs around every natal Moon, including the zodiac seam", () => {
   for (let moon = 0; moon < 12; moon++) for (let saturn = 0; saturn < 12; saturn++) {
@@ -99,13 +98,7 @@ test("Sade Sati state persists independently, preserves natal snapshots and acce
   await c.dispatch({ type: "sade-sati-calculate" }); assert.equal(c.getSnapshot().error, null);
   assert.deepEqual(c.getSnapshot().results.astrology, natal); validateWorkspace(c.getSnapshot().data);
   await c.dispatch({ type: "select-panel", panel: "sade-sati" });
-  const context = buildWorkspaceAssistantContext(c.getSnapshot(), "en");
-  assert.equal(context.version, "local-assistant-context-v12");
-  assert.equal(context.sadeSati!.natalBasis.calculationId, natal!.id);
-  assert.equal(context.sadeSati!.transitBasis.version, "global-saturn-sign-transits-v1");
-  assert.ok(context.sadeSati!.intervals.every(r => r.startRef.startsWith("saturn-") && r.endRef.startsWith("saturn-")));
   await c.dispatch({ type: "select-panel", panel: "periods" });
-  assert.equal(buildWorkspaceAssistantContext(c.getSnapshot(), "en").sadeSati, null, "inactive tools do not add unnecessary context");
   const next = make(store); await next.initialize(); assert.deepEqual(next.getSnapshot().data.ui.sadeSati, c.getSnapshot().data.ui.sadeSati);
   await c.dispatch({ type: "sade-sati-edit", patch: { toYear: "2036" } }); assert.ok(sadeSatiOutdated(c.getSnapshot().data.ui.sadeSati));
   const old = structuredClone(store.data) as unknown as { ui: Record<string, unknown> }; delete old.ui.sadeSati;

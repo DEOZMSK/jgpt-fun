@@ -12,11 +12,9 @@ export function SiteLocaleProvider({ locale, children }: { locale: SiteLocale; c
   useEffect(() => {
     document.documentElement.lang = currentLocale;
     const path = stripSiteLocale(pathname || "/");
-    if (path !== "/chat") {
-      document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute("content", path === "/" || path === "/auth" ? "#000000" : "#ffffff");
-    }
+    document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute("content", "#ffffff");
     // These client workspaces switch presentation without discarding private form state.
-    if (path === "/astrology" || path.startsWith("/admin/orchestra/astrology")) {
+    if (path === "/astrology" || path.startsWith("/astrology/")) {
       document.title = (currentLocale === "en" ? "Astrology workspace" : "Астрологическая мастерская") + " — JGPT-FUN";
       const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
       if (canonical) canonical.href = new URL(pathname || "/", canonical.href).href;

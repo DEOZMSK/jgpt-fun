@@ -121,7 +121,7 @@ const UI_ONLY_ACTIONS = new Set<string>([
   "year-transits-edit", "year-transits-use-profile", "year-transits-filter", "year-transits-open"
 ]);
 
-/** Buttons and the future assistant share this validated action boundary. */
+/** Validated action boundary for workspace controls. */
 export class WorkspaceController {
   private view: WorkspaceView = { data: emptyWorkspace(), loaded: false, busy: false, saving: false, error: null, storageError: null, result: null, results: { astrology: null, numerology: null }, deletion: null };
   private listeners = new Set<() => void>();

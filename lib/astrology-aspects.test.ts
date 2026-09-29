@@ -6,7 +6,6 @@ import { WorkspaceController, type WorkspaceAction } from "./local-workspace/con
 import { decodeWorkspace, emptyWorkspace, sampleDraft, validateWorkspace, WorkspaceError, type WorkspaceData } from "./local-workspace/model";
 import type { WorkspaceStorage } from "./local-workspace/storage";
 import { calculateAstrology } from "./astrology/engine-core";
-import { buildWorkspaceAssistantContext } from "./local-workspace/assistant-context";
 
 test("graha and rashi drishti reproduce Rao chapter10 examples and retain their separate node conventions", () => {
   // Example34: Jupiter Gemini -> Libra/Sagittarius/Aquarius, Mars Leo ->
@@ -62,12 +61,8 @@ test("aspect selection survives storage, preserves chart/dasha results and rejec
   const original = structuredClone(c.getSnapshot().data.calculations);
   const action = { type: "select-aspects", selection: { method: "rashi-sign-v1", varga: "D9" } } as const;
   await c.dispatch(action); assert.equal(c.getSnapshot().error, null);
-  let context = buildWorkspaceAssistantContext(c.getSnapshot(), "en");
-  assert.equal(context.aspects?.rows.length, 27); assert.equal(context.aspects?.varga, "D9");
-  assert.equal(context.aspects?.calculationId, original[0].id);
   await c.dispatch({ type: "select-dasha-system", system: "yogini" });
   assert.deepEqual(c.getSnapshot().data.ui.aspects, action.selection);
-  assert.equal(buildWorkspaceAssistantContext(c.getSnapshot(), "ru").aspects, null);
   await c.dispatch(action);
   await c.dispatch({ type: "select-aspects", selection: { method: "run-code", varga: "D1" } } as unknown as WorkspaceAction);
   assert.equal(c.getSnapshot().error, "invalid_action"); assert.deepEqual(c.getSnapshot().data.ui.aspects, action.selection);
@@ -81,7 +76,5 @@ test("aspect selection survives storage, preserves chart/dasha results and rejec
   store.fail = false; await c.dispatch({ type: "retry-storage" }); await c.dispatch(action); assert.equal(c.getSnapshot().storageError, null); validateWorkspace(store.data);
   const restored = new WorkspaceController(store); await restored.initialize();
   assert.deepEqual(restored.getSnapshot().data.ui.aspects, action.selection);
-  const wrongPerson = structuredClone(restored.getSnapshot()); wrongPerson.data.ui.selectedProfileId = null;
-  context = buildWorkspaceAssistantContext(wrongPerson, "en"); assert.equal(context.aspects, null);
   c.dispose(); restored.dispose();
 });

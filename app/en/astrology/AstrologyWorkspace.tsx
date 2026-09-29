@@ -20,15 +20,11 @@ import { BirthEditor } from "./BirthEditor";
 import { NewBirthScreen } from "./NewBirthScreen";
 import { birthCalculationIssue, discardBirthDraft } from "../../../lib/local-workspace/birth-flow";
 import { refreshAstrology } from "../../../lib/local-workspace/refresh-calculation";
-import { ChartCatalog, WorkspaceHome, LocalProfileScreen } from "./WorkspaceScreens";
-import { LunarCalendar } from "./CalendarScreens";
+import { ChartCatalog, WorkspaceHome } from "./WorkspaceScreens";
 import { YearTransitView } from "./YearTransitView";
 import { MonthPanchangaView } from "./MonthPanchangaView";
 import { WorkspaceIcon } from "./WorkspaceIcon";
-import { LocalChatStore } from "../../../lib/local-chat";
 import { birthDisplay } from "../../../lib/local-workspace/birth-display";
-import type { AssistantReply } from "../../../lib/local-workspace/assistant";
-import { WorkspaceChat } from "./WorkspaceChat";
 import styles from "./workspace.module.css";
 
 export function AstrologyWorkspace({ locale }: { locale: AstrologyLocale }) {
@@ -48,14 +44,6 @@ export function AstrologyWorkspace({ locale }: { locale: AstrologyLocale }) {
 }
 function Workspace({ controller, storage, initialLocale }: { controller: WorkspaceController; storage: IndexedWorkspaceStorage; initialLocale: AstrologyLocale }) {
   const view = useSyncExternalStore(controller.subscribe, controller.getSnapshot, controller.getSnapshot);
-  const [chatStore] = useState(() => new LocalChatStore("jgpt-fun-chat-v1"));
-  const chatView = useSyncExternalStore(chatStore.subscribe, chatStore.getSnapshot, chatStore.getSnapshot);
-  const chatFocus = useRef<AssistantReply["focus"]>(undefined);
-  useEffect(() => { try { chatStore.load(window.sessionStorage); } catch { chatStore.load(null); } }, [chatStore]);
-  useEffect(() => {
-    const id = view.data.ui.selectedProfileId;
-    if (chatView.ready && id && chatView.chat.recentProfiles[0] !== id) chatStore.update(c => ({ ...c, recentProfiles: [id, ...c.recentProfiles.filter(value => value !== id)].slice(0, 8) }));
-  }, [chatStore, chatView.ready, chatView.chat.recentProfiles, view.data.ui.selectedProfileId]);
   const pathname = usePathname();
   const router = useRouter();
   const requestedProfile = useSearchParams().get("chart");
@@ -125,8 +113,7 @@ function Workspace({ controller, storage, initialLocale }: { controller: Workspa
   const screenTitle: Record<string, string> = {
     new: t("New chart", "Новая карта"),
     panchanga: t("Daily panchanga", "Панчанга на день"), transits: t("Year transits", "Транзиты на год"),
-    calendar: t("Lunar forecast", "Лунный прогноз"), profile: t("My profile", "Мой профиль"),
-    settings: t("Settings", "Настройки"), subscription: t("Subscription", "Подписка")
+    calendar: t("Monthly panchanga", "Панчанга на месяц"), settings: t("Settings", "Настройки")
   };
   const openProfile = async (id: string) => {
     await controller.dispatch({ type: "open-profile", id });
@@ -141,16 +128,6 @@ function Workspace({ controller, storage, initialLocale }: { controller: Workspa
     if (dirtyProfile || birthCalculationIssue(selected.data)) { setDrawer("edit"); return; }
     void refreshAstrology(controller);
   };
-  const navigateChat = (reply: AssistantReply) => {
-    close();
-    if (reply.screen === "new") router.push(`${basePath}/new`);
-    if (reply.screen === "chart") { chatFocus.current = reply.focus; router.push(chartHref()); }
-  };
-  useEffect(() => {
-    if (!chatFocus.current || section !== "chart" || requestedProfile !== view.data.ui.selectedProfileId) return;
-    const target = document.querySelector<HTMLElement>(`[data-workspace-target="${chatFocus.current}"]`);
-    if (target) { target.focus({ preventScroll: true }); target.scrollIntoView({ block: "start" }); chatFocus.current = undefined; }
-  }, [section, requestedProfile, view.data.ui.selectedProfileId, view.data.ui.varga, view.data.ui.workbench.panel]);
   return <main className={styles.workspace} lang={locale}>
     {process.env.NEXT_PUBLIC_LOCAL_WORKSPACE_ID && <p className={styles.hint} aria-label={t("Local version", "Локальная версия")}>{process.env.NEXT_PUBLIC_LOCAL_WORKSPACE_ID}</p>}
     <div className={styles.referenceShell}>
@@ -160,7 +137,7 @@ function Workspace({ controller, storage, initialLocale }: { controller: Workspa
         <Link href={`${basePath}/home`} aria-current={section === "home" ? "page" : undefined} onClick={close}>{t("Home", "Главная")}</Link>
         <Link href={`${basePath}/charts`} aria-current={section === "charts" ? "page" : undefined} onClick={openCatalog}>{t("My charts", "Мои карты")}</Link>
         <Link href={`${basePath}/panchanga`} aria-current={section === "panchanga" ? "page" : undefined} onClick={close}>{t("Panchanga", "Панчанга")}</Link>
-        <ToolMenu label={t("Forecasts", "Прогнозы")}><button type="button" onClick={() => { close(); router.push(`${basePath}/transits`); }}>{t("Yearly transits", "Транзиты на год")}</button><button type="button" onClick={() => { close(); router.push(`${basePath}/calendar`); }}>{t("Lunar forecast", "Лунный прогноз")}</button><button type="button" onClick={() => setDrawer("calendar")}>{t("Monthly panchanga", "Панчанга на месяц")}</button></ToolMenu>
+        <ToolMenu label={t("Calendars and transits", "Календари и транзиты")}><button type="button" onClick={() => { close(); router.push(`${basePath}/transits`); }}>{t("Yearly transits", "Транзиты на год")}</button><button type="button" onClick={() => { close(); router.push(`${basePath}/calendar`); }}>{t("Monthly panchanga", "Панчанга на месяц")}</button></ToolMenu>
         <Link href={`${basePath}/settings`}>{t("Settings", "Настройки")}</Link>
         <nav className={styles.referenceLanguages} aria-label={t("Language", "Язык")}>{(["ru", "en"] as const).map(language => <Link key={language} href={`/${language}/${workspacePath}${languageSuffix}`} lang={language} aria-current={locale === language ? "page" : undefined} onClick={event => {
           if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); if (locale !== language) window.history.pushState(null, "", `/${language}/${workspacePath}${languageSuffix}`);
@@ -171,13 +148,12 @@ function Workspace({ controller, storage, initialLocale }: { controller: Workspa
     <div ref={alertRef} tabIndex={-1} className={styles.alerts}>{view.error && view.error !== view.storageError && <p role="alert" className={styles.error}>{workspaceError(view.error, locale)}{view.error === "save_note_first" && <button type="button" onClick={() => setDrawer("notes")}>{t("Return to note", "Вернуться к заметке")}</button>}</p>}{view.storageError && <div role="alert" className={styles.error}><p>{workspaceError(view.storageError, locale)}</p>{<button type="button" disabled={view.busy || view.saving} onClick={() => act({ type: "retry-storage" })}>{!view.loaded ? view.busy ? t("Connecting…", "Подключаем…") : t("Reconnect collection", "Подключить коллекцию") : t("Retry storage", "Повторить сохранение")}</button>}</div>}</div>
 
     {dirtyProfile && section !== "new" && !drawer && <div className={styles.draftNotice}><span>{t("Unfinished birth edits", "Есть несохранённые данные рождения")}</span><button type="button" onClick={() => setDrawer("edit")}>{t("Continue birth draft", "Продолжить черновик карты")}</button><button type="button" onClick={() => void discardBirthDraft(controller)}>{t("Discard changes", "Отменить изменения")}</button></div>}
-    {section === "home" && <WorkspaceHome recentProfiles={chatView.chat.recentProfiles} view={view} locale={locale} act={act} openProfile={openProfile} newProfile={newProfile} date={date} onDate={setDate} calendar={() => setDrawer("calendar")} />}
+    {section === "home" && <WorkspaceHome view={view} locale={locale} act={act} openProfile={openProfile} newProfile={newProfile} date={date} onDate={setDate} calendar={() => setDrawer("calendar")} />}
     {section === "charts" && <ChartCatalog createFolder={async name => { await controller.dispatch({type:"create-folder",name}); await controller.settle(); return !controller.getSnapshot().error && !controller.getSnapshot().storageError; }} view={view} locale={locale} act={act} openProfile={openProfile} newProfile={newProfile} />}
     {section === "new" && <NewBirthScreen controller={controller} view={view} locale={locale} done={() => router.push(chartHref())} cancel={() => router.push(`${basePath}/charts`)} resume={() => { router.push(chartHref()); setDrawer(view.error === "save_note_first" ? "notes" : view.error === "save_result_first" ? null : "edit"); }} />}
     {section === "panchanga" && <DailyPanchangaView state={ui.dayPanchanga} month={ui.monthPanchanga} date={date} locale={locale} act={act} busy={view.busy} southern={ui.southern} hasProfile={!!selected} />}
     {section === "transits" && <YearTransitView state={ui.yearTransits} moment={ui.yearTransitMoment} southern={ui.southern} busy={view.busy} locale={locale} hasProfile={!!selected} act={act} />}
-    {section === "calendar" && <LunarCalendar date={date} onDate={setDate} locale={locale} />}
-    {section === "profile" && <LocalProfileScreen view={view} locale={locale} openCharts={() => router.push(`${basePath}/charts`)} />}
+    {section === "calendar" && <MonthPanchangaView busy={view.busy} state={ui.monthPanchanga} locale={locale} hasProfile={!!selected} act={act} />}
     {section === "settings" && <section className={styles.accountScreen}><h1>{t("Workspace settings", "Настройки мастерской")}</h1><div className={styles.compactActions}><button type="button" aria-pressed={!ui.southern} onClick={() => act({type:"chart-style",southern:false})}>{t("Northern chart", "Северная карта")}</button><button type="button" aria-pressed={ui.southern} onClick={() => act({type:"chart-style",southern:true})}>{t("Southern chart", "Южная карта")}</button></div><CalculationProfiles result={chart} locale={locale} /></section>}
 
     {section === "chart" && requestedProfile && requestedProfile !== ui.selectedProfileId ? <section className={styles.emptyDesk}><h1>{t("Open chart", "Открытие карты")}</h1><p>{t("This chart has not opened. Resolve the message above or choose a record from your catalog.", "Карта ещё не открылась. Исправь причину в сообщении выше или выбери запись из каталога.")}</p><button type="button" disabled={view.busy} onClick={() => void openProfile(requestedProfile)}>{t("Try opening again", "Открыть ещё раз")}</button><Link href={`${basePath}/charts`}>{t("My charts", "Мои карты")}</Link></section> : section === "chart" && <><div className={styles.referenceProfile}>
@@ -218,6 +194,5 @@ function Workspace({ controller, storage, initialLocale }: { controller: Workspa
         <CalculationProfiles result={chart} locale={locale} /></>}
     </WorkbenchDialog>}
     <footer className={styles.workspaceFooter}><span>JGPT-FUN · AGPL-3.0-or-later</span><a href={process.env.NEXT_PUBLIC_SOURCE_URL || "https://github.com/DEOZMSK/jgpt-fun"} target="_blank" rel="noopener noreferrer">{t("Source code of this version", "Исходники этой версии")}</a><Link href={`/${locale}/about`}>{t("About and data", "О лаборатории и данных")}</Link></footer>
-    <WorkspaceChat controller={controller} view={view} locale={locale} section={section} store={chatStore} blocked={Boolean(drawer) || editPending} navigate={navigateChat} />
   </main>;
 }

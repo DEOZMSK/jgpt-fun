@@ -1,9 +1,6 @@
 import type { AstrologyLocale } from "../astrology/workspace-copy";
 
 const errors: Record<string, [string, string]> = {
-  demo_calculation_unavailable: ["No prepared result for these details or this date. The record can be saved. Demo transits and calendars cover September 2026 in London at 12:00; use a prepared chart or restore those values.", "Для этих данных или даты нет подготовленного результата. Запись можно сохранить. Транзиты и календари демо подготовлены для Лондона на сентябрь 2026, 12:00; открой готовую карту или верни эти значения."],
-  demo_unavailable: ["The demo set could not be loaded. Reload to retry; existing records are retained.", "Демонстрационный набор не загрузился. Обнови страницу для повтора; существующие записи сохранены."],
-  storage_server_disabled: ["The shared local archive is not enabled on this server. Start the canonical local workspace.", "Общий локальный архив не включён на этом сервере. Запусти основную локальную версию программы."],
   storage_busy: ["Another window is saving the shared archive. Wait for it to finish, then retry.", "Другое окно сохраняет общий архив. Дождись завершения и повтори действие."],
   storage_encryption_unavailable: ["Windows could not protect the local archive. Existing records were not replaced.", "Windows не удалось защитить локальный архив. Существующие записи не заменены."],
   storage_unsafe_path: ["The archive path could not be used safely. The existing files were not changed.", "Не удалось безопасно открыть папку архива. Существующие файлы не изменены."],
