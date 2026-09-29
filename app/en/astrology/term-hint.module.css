@@ -1,0 +1,4 @@
+.term{font:inherit!important;color:inherit!important;display:inline!important;min-width:0!important;min-height:0!important;background:transparent!important;border:0!important;border-bottom:1px dotted #7b8792!important;border-radius:0!important;box-shadow:none!important;padding:3px 2px!important;text-align:inherit;cursor:help!important}.term:focus-visible{outline:2px solid #1686b0;outline-offset:3px}.bubble{position:fixed;z-index:150;display:block;width:min(280px,calc(100vw - 24px));padding:12px 14px;border:1px solid #dce2e9;border-radius:10px;box-shadow:0 6px 24px #10203024;background:var(--surface-soft);color:var(--ink);font:13px/1.5 system-ui,sans-serif;pointer-events:auto;overflow-wrap:anywhere}
+
+.bubble { background: var(--surface); color: var(--ink); border-color: var(--line); max-height: calc(100dvh - 24px); overflow-y: auto; }
+.bubble p { margin: 0; }

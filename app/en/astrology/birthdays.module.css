@@ -1,0 +1,32 @@
+.card { margin-top: 24px; border: 1px solid var(--line); background: var(--surface); border-radius: 20px; padding: 18px; color: var(--ink); }
+.card h2 { display: flex; align-items: center; gap: 9px; margin: 0 0 8px; }
+.card h2 > span, .toggle > span:first-child { width: 20px; height: 20px; flex: 0 0 auto; }
+.help { color: var(--ink); font-size: 12px; line-height: 1.6; margin: 9px 0 0; }
+.list { list-style: none; padding: 0; margin: 14px 0; display: grid; gap: 8px; }
+.list li { display: flex; align-items: flex-start; gap: 4px; background: var(--surface); border-radius: 13px; border: 1px solid var(--line); padding: 10px; }
+.person { min-width: 0; flex: 1; text-align: left; display: grid; gap: 5px; border: 0; padding: 4px; background: transparent; color: inherit; }
+.person strong { overflow-wrap: anywhere; }
+.person > span:last-of-type, .person small { font-size: 12px; color: var(--muted); }
+.when, .today { width: fit-content; font-size: 11px; font-weight: 600; color: var(--ink); }
+.today { color: var(--ink); background: var(--surface); border-radius: 6px; padding: 1px 7px; }
+.list .dismiss { flex: 0 0 auto; width: 34px; min-height: 34px; border: 0; border-radius: 50%; background: transparent; color: var(--ink); display: grid; place-items: center; padding: 8px; }
+.dismiss > span { font-size: 20px; line-height: 1; }
+.empty { margin: 14px 0; color: var(--ink); line-height: 1.6; }
+.enable > button { background: var(--surface-soft); color: var(--ink); border: 0; padding: 10px 14px; border-radius: 12px; }
+.toggleGroup { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.toggleGroup button.toggle[role="switch"], .folderSettings button.toggle[role="switch"] { display: inline-flex; align-items: center; gap: 9px; background: var(--surface-soft); border: 1px solid transparent; border-radius: 14px; padding: 10px 13px; color: var(--ink); text-align: left; }
+.toggleGroup .toggle[aria-checked="true"], .folderSettings .toggle[aria-checked="true"] { background: var(--surface-soft); color: var(--ink); border-color: var(--line); }
+.track { display: inline-flex; align-items: center; flex: 0 0 auto; width: 32px; height: 19px; background: var(--surface); padding: 2px; border-radius: 20px; }
+.track > span { width: 15px; height: 15px; border-radius: 50%; background: var(--surface); transition: transform .15s ease; box-shadow: none; }
+.toggle[aria-checked="true"] .track { background: var(--surface-soft); }
+.toggle[aria-checked="true"] .track > span { transform: translateX(13px); }
+.toggleGroup .inherit { font-size: 11px; border: 0; padding: 6px; background: transparent; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.folderSettings { margin: 18px 0; max-width: 600px; }
+.card button:hover, .toggle:hover { filter: brightness(.98); }
+.card button:disabled, .toggleGroup button:disabled, .folderSettings button:disabled { opacity: .55; cursor: default; }
+.card button:focus-visible, .toggleGroup button:focus-visible, .folderSettings button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .track > span { transition: none; } }
+
+.track { background:#444; }
+.track > span { background:#fff; }
+.toggle[aria-checked="true"] .track { background:#608c74; }

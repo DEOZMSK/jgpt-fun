@@ -1,0 +1,9 @@
+import Link from "next/link";
+import {notFound} from "next/navigation";
+export default async function About({params}:{params:Promise<{locale:string}>}){const {locale}=await params;if(locale!=="ru"&&locale!=="en")notFound();const ru=locale==="ru";return <main className="lab-about">
+ <h1>JGPT-FUN</h1><p>{ru?"Открытая исследовательская лаборатория Джйотиш. Настройки и методы доступны в мастерской. Полное совпадение с Jagannatha Hora не подтверждено.":"An open Jyotish research laboratory. Methods and settings are visible in the workspace. Complete Jagannatha Hora parity has not been established."}</p>
+ <p>{ru?"Карты, папки, заметки и результаты сохраняются только в браузере этого устройства. Очистка данных браузера удалит коллекцию; между устройствами она не синхронизируется. Изначально каталог пуст.":"Charts, folders, notes and results are stored only in this device's browser. Clearing browser data deletes this collection; there is no cross-device synchronization. A new collection is empty."}</p>
+ <p>{ru?"Для расчёта сервер получает дату, время, координаты, часовой пояс и настройки. Имена и заметки для расчёта не требуются. Приложение не записывает данные рождения в журналы и не сохраняет их в серверной базе. Хостинг Vercel обрабатывает технические сведения о запросах.":"Calculation requests send the date, time, coordinates, time zone and settings to the server. Names and notes are not needed for calculation. The app does not log birth details or persist them in a server database. Vercel processes technical request information."}</p>
+ <p>AGPL-3.0-or-later · <a href={process.env.NEXT_PUBLIC_SOURCE_URL}>Source code</a> · <a href="https://www.astro.com/swisseph/">Swiss Ephemeris</a> · <a href="https://www.geonames.org/">GeoNames</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>)</p>
+ <Link href={`/${locale}/astrology/home`}>{ru?"Открыть мастерскую":"Open workspace"}</Link>
+ </main>;}

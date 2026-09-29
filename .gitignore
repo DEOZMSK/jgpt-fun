@@ -1,0 +1,15 @@
+node_modules/
+.next/
+.vercel/
+.generated/
+work/
+artifacts/
+*.tsbuildinfo
+.env*
+!.env.example
+*.pem
+*.key
+*.p12
+*.db
+*.sqlite*
+*.log
