@@ -6,4 +6,3 @@ Source URLs, attribution and both compressed/raw SHA-256 checksums: geonames.jso
 Builds install these exact files; they never silently refresh a changing catalog.
 Update this snapshot deliberately with the preparation scripts, regenerate the
 receipt and verify search tests. No personal chart data is in these files.
-

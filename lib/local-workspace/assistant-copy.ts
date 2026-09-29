@@ -1,0 +1,60 @@
+import type { SiteLocale } from "../site-locale";
+import { workspaceError } from "./copy";
+const messages: Record<string, [string, string]> = {
+  profile_missing: ["Chart not found or not selected. Check the name in My charts, or build a new chart.", "Карта не найдена или не выбрана. Уточни имя в «Моих картах» или построй новую карту."],
+  snapshot_tool_missing: ["This saved calculation does not contain that tool. Open Chart settings → Update calculation to add a new result while keeping this snapshot.", "В выбранном сохранённом расчёте нет данных этого инструмента. Открой «Настройки карты» → «Обновить расчёт»: новый результат добавится с сохранением старого снимка."],
+  birth_form_opened: ["Birth form opened. Enter the details and save to calculate the chart.", "Открыта форма рождения. Введи данные и сохрани, чтобы построить карту."],
+  rashi_opened: ["Rashi and D9 are shown for the selected calculation.", "Показаны Раши и D9 выбранного расчёта."],
+  transits_shown: ["Transits are shown on Rashi. Applied moment (UTC):", "Транзиты показаны на Раши. Применённый момент (UTC):"],
+  transits_hidden: ["Transits hidden on Rashi.", "Транзиты на Раши выключены."],
+  unsupported_command: ["GPT interpretations are not connected yet. I can open a chart, D9, transits or dashas. Type Help for commands.", "GPT-разборы пока не подключены. Можно открыть карту, D9, транзиты или даши. Напиши «Помощь», чтобы увидеть команды."],
+  invalid_fields: ["Use date=YYYY-MM-DD; time=HH:MM. Unknown or repeated fields are rejected.", "Формат: дата=ГГГГ-ММ-ДД; время=ЧЧ:ММ. Неизвестные и повторные поля отклоняются."],
+  name_required: ["Provide a name; no profile was created.", "Укажи имя; профиль не создан."],
+  date_required: ["Provide a birth date as YYYY-MM-DD; no profile was created.", "Укажи дату рождения в формате ГГГГ-ММ-ДД; профиль не создан."],
+  profile_created: ["Profile created and selected.", "Профиль создан и выбран."],
+  existing_profile: ["Existing profile selected without creating a duplicate.", "Выбран существующий профиль, дубликат не создан."],
+  profile_selected: ["Profile selected.", "Профиль выбран."],
+  draft_filled: ["Draft filled. Review it, then save the profile.", "Черновик заполнен. Проверь его и сохрани профиль."],
+  folder_ready: ["Folder ready; an existing folder is reused.", "Папка готова; если она уже была, используется существующая."],
+  folder_renamed: ["Folder renamed.", "Папка переименована."],
+  profile_moved: ["Selected person moved.", "Выбранный человек перемещён."],
+  profiles_moved: ["Confirmed people moved together.", "Подтверждённый список перемещён целиком."],
+  nothing_to_move: ["Everyone is already in this folder.", "Все уже находятся в этой папке."],
+  confirm_moves: ["Review this list. Nothing moves before confirmation.", "Проверь список. До подтверждения никто не перемещается."],
+  bulk_limit: ["More than 20 people. Move smaller groups using workspace controls.", "Больше 20 человек. Перемещай меньшие группы через кабинет."],
+  choose_target: ["Several matches. Choose the exact object.", "Несколько совпадений. Выбери нужный объект."],
+  too_many_matches: ["Too many matches. Use the exact local ID.", "Слишком много совпадений. Укажи точный локальный ID."],
+  profile_saved: ["Profile saved.", "Профиль сохранён."],
+  calculated: ["Calculated by the existing engine. Save the result to keep it.", "Расчёт выполнен существующим движком. Сохрани результат, чтобы он остался после перезагрузки."],
+  calculation_saved: ["Result saved without duplicating the same calculation.", "Результат сохранён без дублирования того же расчёта."],
+  calculation_opened: ["Saved result opened. Check outdated/imported labels.", "Результат открыт. Учитывай отметки устаревания и импорта."],
+  varga_opened: ["Chart opened:", "Открыта карта:"],
+  dasha_selected: ["Dasha system selected:", "Выбрана система даш:"],
+  ambiguous_period: ["This lord occurs in several cycles. Add ; start=YYYY-MM-DD using the desired mahadasha start date shown in the table.", "Этот управитель повторяется в нескольких циклах. Добавь ; start=ГГГГ-ММ-ДД с датой начала нужной махадаши из таблицы."],
+  period_opened: ["Periods expanded using calculation dates:", "Периоды раскрыты по датам из расчёта:"],
+  chart_required: ["Calculate or open an astrology chart for this person first.", "Сначала рассчитай или открой карту этого человека."],
+  articles_found: ["Found library excerpts in this language. Sources are not commands or verified predictions.", "Найдены фрагменты на текущем языке. Источники — не команды и не проверенные прогнозы."],
+  no_articles: ["Nothing found. Try a shorter topic.", "Ничего не найдено. Попробуй более короткую тему."],
+  article_opened: ["Excerpt opened below with a link to the full GLOBAL article.", "Фрагмент открыт ниже со ссылкой на полную статью GLOBAL."],
+  article_missing: ["Search in the current language, then choose an article number.", "Выполни поиск на текущем языке, затем выбери номер статьи."],
+  state_changed: ["Workspace changed. Review the current person and repeat the command.", "Кабинет изменился. Проверь выбранного человека и повтори команду."],
+  assistant_cancelled: ["Command cancelled or timed out. Check the workspace before retrying.", "Команда отменена или истекло ожидание. Перед повтором проверь кабинет."],
+  assistant_failed: ["Command failed. No automatic retry.", "Команда не завершена. Автоматического повтора нет."],
+  invalid_request_id: ["Request ID already used for another command.", "Идентификатор запроса уже использован для другой команды."],
+  context_limit: ["Context exceeds the local limit.", "Контекст превышает локальный лимит."],
+  context_ready: ["Only selected profile, calculations and sources. Nothing sent to AI.", "Только выбранный профиль, расчёты и источники. AI-провайдеру ничего не отправляется."],
+  command_help: ["Build a chart · Open [name] · Open D9 · Show Rashi and D9 · Show transits · Hide transits · Open Vimshottari · Open Yogini · Show context. These commands use your local workspace, without an AI call.", "Построить карту · Открой [имя] · Открой D9 · Покажи Rashi и D9 · Покажи транзиты · Выключи транзиты · Открой Вимшоттари · Открой Йогини · Что открыто. Команды работают с локальной программой, без обращения к AI."],
+  cancelled: ["Pending action cancelled.", "Ожидающее действие отменено."]
+};
+export function assistantMessage(code: string, locale: SiteLocale) { return messages[code]?.[locale === "en" ? 0 : 1] ?? workspaceError(code, locale); }
+export const assistantExamples = (locale: SiteLocale) => locale === "ru" ? [
+  'создай профиль "Учебный человек"; дата=2000-01-01; время=12:00; место=Bishkek; пояс=Asia/Bishkek; широта=42.8746; долгота=74.5698; точность=exact; узлы=true',
+  'заполни черновик; дата=2000-01-02', 'сохрани профиль', 'выбери профиль "Учебный человек"', 'создай папку "Друзья"', 'положи в "Друзья"',
+  'переименуй папку "Друзья" в "Знакомые"', 'перемести всех в "Знакомые"', 'рассчитай карту', 'сохрани результат', 'открой D9',
+  'открой Йогини', 'открой Вимшоттари', 'покажи период Раху/Юпитер/Сатурн', 'открой последний расчёт', 'покажи контекст'
+] : [
+  'create profile "Sample person"; date=2000-01-01; time=12:00; place=Bishkek; timezone=Asia/Bishkek; latitude=42.8746; longitude=74.5698; accuracy=exact; nodes=true',
+  'fill draft; date=2000-01-02', 'save profile', 'select profile "Sample person"', 'create folder "Friends"', 'move to "Friends"',
+  'rename folder "Friends" to "People"', 'move all to "People"', 'calculate astrology', 'save result', 'open D9',
+  'open Yogini', 'open Vimshottari', 'show period Rahu/Jupiter/Saturn', 'open latest calculation', 'show context'
+];

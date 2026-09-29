@@ -1,0 +1,42 @@
+{
+  "name": "jgpt-fun",
+  "version": "0.1.0",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1 --port 3110",
+    "prepare:data": "node scripts/prepare-astrology-ephemeris.mjs && node scripts/install-place-assets.mjs",
+    "build": "npm run prepare:data && next build --webpack",
+    "start": "next start --hostname 127.0.0.1 --port 3110",
+    "test": "node --import tsx --test lib/*.test.ts",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit --incremental false"
+  },
+  "dependencies": {
+    "luxon": "3.7.2",
+    "next": "16.3.3",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "sweph": "2.10.3-8"
+  },
+  "devDependencies": {
+    "@types/luxon": "^3.7.1",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.4",
+    "@types/react-dom": "^19.0.2",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "16.3.3",
+    "postcss": "8.5.25",
+    "tailwindcss": "^3.4.1",
+    "tsx": "^4.23.1",
+    "typescript": "^5.2.2"
+  },
+  "overrides": {
+    "postcss": "8.5.25",
+    "sharp": "0.35.4"
+  }
+}
